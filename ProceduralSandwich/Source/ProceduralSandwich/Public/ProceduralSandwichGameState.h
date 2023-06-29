@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameStateBase.h"
+#include "Score.h"
 #include "ProceduralSandwichGameState.generated.h"
 
 /**
@@ -15,9 +16,6 @@ class PROCEDURALSANDWICH_API AProceduralSandwichGameState : public AGameStateBas
 	GENERATED_BODY()
 	
 public:
-	UPROPERTY(BlueprintReadWrite)
-	float promotionScore;
-
-	UPROPERTY(BlueprintReadWrite)
-	float annoyanceScore;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FScore currentScore;
 };

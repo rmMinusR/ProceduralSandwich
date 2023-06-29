@@ -11,7 +11,7 @@ UObjective::UObjective()
 	PrimaryComponentTick.bCanEverTick = false;
 
 	state = EObjectiveState::NoChanges;
-	completionValue = 1;
+	completionScore.promotion = 1;
 }
 
 
@@ -33,7 +33,20 @@ void UObjective::MarkCompleted()
 	}
 }
 
-EObjectiveState UObjective::GetState()
+EObjectiveState UObjective::GetState() const
 {
 	return state;
+}
+
+FScore UObjective::EvalScore() const
+{
+	switch (state)
+	{
+	case EObjectiveState::NoChanges: return incompleteScore;
+	case EObjectiveState::Completed: return completionScore;
+
+	default:
+		unimplemented();
+		return FScore();
+	}
 }

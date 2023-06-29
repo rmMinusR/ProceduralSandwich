@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Score.h"
 #include "Objective.generated.h"
 
 
@@ -36,16 +37,22 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintGetter = "GetState", meta = (AllowPrivateAccess = "true"))
 	EObjectiveState state;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true", ClampMin = "0.0"))
-	float completionValue;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FScore completionScore;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	FScore incompleteScore;
+
+public:
 	DECLARE_EVENT_OneParam(UObjective, FObjectiveCallback, UObjective*)
 	FObjectiveCallback onCompleted;
 
-public:
 	UFUNCTION(BlueprintCallable)
 	void MarkCompleted();
 
 	UFUNCTION(BlueprintPure)
-	EObjectiveState GetState();
+	EObjectiveState GetState() const;
+
+	UFUNCTION(BlueprintPure)
+	FScore EvalScore() const;
 };
