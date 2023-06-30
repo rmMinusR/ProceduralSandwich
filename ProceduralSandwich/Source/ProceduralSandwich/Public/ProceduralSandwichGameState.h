@@ -14,8 +14,4 @@ UCLASS()
 class PROCEDURALSANDWICH_API AProceduralSandwichGameState : public AGameStateBase
 {
 	GENERATED_BODY()
-	
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FScore currentScore;
 };

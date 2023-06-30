@@ -17,10 +17,10 @@ public:
 	FScore();
 	~FScore();
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float annoyance;
 
-	UPROPERTY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float promotion;
 
 	FScore operator+(const FScore& rhs) const;
