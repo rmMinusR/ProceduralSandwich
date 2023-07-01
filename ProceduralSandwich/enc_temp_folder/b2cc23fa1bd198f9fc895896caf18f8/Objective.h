@@ -46,11 +46,11 @@ protected:
 	bool bIsContestable;
 
 	/** Leave null to allow anyone to claim */
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	APlayerState* owner;
 
 	/** Who takes the credit for completing (or blame for failing) this objective */
-	UPROPERTY(VisibleInstanceOnly, BlueprintGetter = "GetCreditor", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(BlueprintGetter = "GetCreditor", meta = (AllowPrivateAccess = "true"))
 	APlayerState* creditor;
 
 public:

@@ -12,6 +12,9 @@ UObjective::UObjective()
 
 	state = EObjectiveState::NoChanges;
 	completionScore.promotion = 1;
+	bIsContestable = false;
+	owner = nullptr;
+	creditor = nullptr;
 }
 
 
@@ -24,12 +27,13 @@ void UObjective::BeginPlay()
 	
 }
 
-void UObjective::MarkCompleted(APawn* whoCompleted)
+void UObjective::TryMarkCompleted(APlayerState* who)
 {
-	if (state == EObjectiveState::NoChanges)
+	if ((!owner || owner == who) && (!creditor || bIsContestable))
 	{
 		state = EObjectiveState::Completed;
 		onCompleted.Broadcast(this);
+		creditor = who;
 	}
 }
 
@@ -38,15 +42,31 @@ EObjectiveState UObjective::GetState() const
 	return state;
 }
 
-FScore UObjective::EvalScore() const
+APlayerState* UObjective::GetCreditor() const
 {
-	switch (state)
-	{
-	case EObjectiveState::NoChanges: return incompleteScore;
-	case EObjectiveState::Completed: return completionScore;
+	return creditor;
+}
 
-	default:
-		unimplemented();
+FScore UObjective::EvalScoreFor(APlayerState* who) const
+{
+	if (who == creditor) // You took credit (or blame)
+	{
+		switch (state)
+		{
+		case EObjectiveState::NoChanges: return incompleteScore;
+		case EObjectiveState::Completed: return completionScore;
+
+		default:
+			unimplemented();
+			return FScore();
+		}
+	}
+	else if (who == owner) // You were supposed to interact but didn't, or it was stolen. Always count as incomplete.
+	{
+		return incompleteScore;
+	}
+	else // You didn't interact, but didn't have to. No change.
+	{
 		return FScore();
 	}
 }
