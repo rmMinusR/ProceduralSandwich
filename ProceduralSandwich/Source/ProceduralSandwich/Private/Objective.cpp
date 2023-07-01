@@ -24,7 +24,7 @@ void UObjective::BeginPlay()
 	
 }
 
-void UObjective::MarkCompleted()
+void UObjective::MarkCompleted(APawn* whoCompleted)
 {
 	if (state == EObjectiveState::NoChanges)
 	{

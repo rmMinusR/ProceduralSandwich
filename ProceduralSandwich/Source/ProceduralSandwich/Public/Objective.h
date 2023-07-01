@@ -16,15 +16,13 @@ enum class EObjectiveState : uint8
 };
 
 
-class UObjectiveSubsystem;
+class APawn;
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROCEDURALSANDWICH_API UObjective : public UActorComponent
 {
 	GENERATED_BODY()
-
-	friend class UObjectiveSubsystem;
 
 public:	
 	// Sets default values for this component's properties
@@ -48,7 +46,7 @@ public:
 	FObjectiveCallback onCompleted;
 
 	UFUNCTION(BlueprintCallable)
-	void MarkCompleted();
+	void MarkCompleted(APawn* whoCompleted);
 
 	UFUNCTION(BlueprintPure)
 	EObjectiveState GetState() const;
