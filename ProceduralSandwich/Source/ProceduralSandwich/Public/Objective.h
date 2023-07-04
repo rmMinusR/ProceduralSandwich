@@ -28,9 +28,13 @@ public:
 	// Sets default values for this component's properties
 	UObjective();
 
+	UFUNCTION(BlueprintCallable)
+	static TArray<UObjective*> GetLiveObjectives();
+private:
+	static TArray<UObjective*> INSTANCES; // Fast lookup
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void BeginDestroy() override;
 
 	UPROPERTY(EditAnywhere, BlueprintGetter = "GetState", meta = (AllowPrivateAccess = "true"))
 	EObjectiveState state;

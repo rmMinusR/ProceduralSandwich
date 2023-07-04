@@ -17,14 +17,25 @@ UObjective::UObjective()
 	creditor = nullptr;
 }
 
+TArray<UObjective*> UObjective::GetLiveObjectives()
+{
+	return UObjective::INSTANCES;
+}
 
-// Called when the game starts
+TArray<UObjective*> UObjective::INSTANCES;
+
 void UObjective::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	UObjective::INSTANCES.Add(this);
+}
+
+void UObjective::BeginDestroy()
+{
+	Super::BeginDestroy();
+
+	UObjective::INSTANCES.Remove(this);
 }
 
 void UObjective::TryMarkCompleted(APlayerState* who)
