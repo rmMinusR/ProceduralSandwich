@@ -72,4 +72,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	FScore EvalScoreFor(APlayerState* who) const;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText displayName;
 };
