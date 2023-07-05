@@ -11,15 +11,16 @@
 UENUM(BlueprintType)
 enum class EObjectiveState : uint8
 {
-	NoChanges UMETA( DisplayName="No Action Taken" ),
-	Completed UMETA( DisplayName="Completed" )
+	Failed        UMETA( DisplayName="Failed" ),
+	NoInteraction UMETA( DisplayName="No Interaction" ),
+	Completed     UMETA( DisplayName="Completed" )
 };
 
 
 class APlayerState;
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( Abstract, Blueprintable, ClassGroup=(Custom) )
 class PROCEDURALSANDWICH_API UObjective : public UActorComponent
 {
 	GENERATED_BODY()
@@ -35,37 +36,12 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintGetter = "GetState", meta = (AllowPrivateAccess = "true"))
 	EObjectiveState state;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FScore completionScore;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FScore incompleteScore;
-
-	/** Allow "stealing" objectives */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	bool bIsContestable;
-
-	/** Leave null to allow anyone to claim */
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	APlayerState* owner;
-
-	/** Who takes the credit for completing (or blame for failing) this objective */
-	UPROPERTY(VisibleInstanceOnly, BlueprintGetter = "GetCreditor", meta = (AllowPrivateAccess = "true"))
-	APlayerState* creditor;
-
 public:
-	DECLARE_EVENT_OneParam(UObjective, FObjectiveCallback, UObjective*)
-	FObjectiveCallback onCompleted;
-
-	UFUNCTION(BlueprintCallable)
-	void TryMarkCompleted(APlayerState* who);
-
 	UFUNCTION(BlueprintPure)
 	EObjectiveState GetState() const;
 
-	UFUNCTION(BlueprintPure)
-	APlayerState* GetCreditor() const;
-
-	UFUNCTION(BlueprintPure)
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
 	FScore EvalScoreFor(APlayerState* who) const;
+protected:
+	virtual FScore EvalScoreFor_Implementation(APlayerState* who) const; // = 0
 };
