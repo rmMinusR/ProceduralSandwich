@@ -37,3 +37,8 @@ FScore UCompletableObjective::EvalScoreFor_Implementation(APlayerState* who) con
 		return FScore();
 	}
 }
+
+void UCompletableObjective::AssumeDefaultIfNoInteraction_Implementation()
+{
+	if (state == EObjectiveState::NoInteraction) state = EObjectiveState::Failed;
+}

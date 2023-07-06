@@ -38,4 +38,5 @@ public:
 
 protected:
 	virtual FScore EvalScoreFor_Implementation(APlayerState* who) const override;
+	virtual void AssumeDefaultIfNoInteraction_Implementation() override;
 };

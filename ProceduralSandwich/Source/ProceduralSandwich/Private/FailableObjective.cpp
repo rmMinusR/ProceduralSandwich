@@ -38,3 +38,8 @@ FScore UFailableObjective::EvalScoreFor_Implementation(APlayerState* who) const
 		return FScore();
 	}
 }
+
+void UFailableObjective::AssumeDefaultIfNoInteraction_Implementation()
+{
+	if (state == EObjectiveState::NoInteraction) state = EObjectiveState::Completed;
+}

@@ -13,6 +13,10 @@ UObjective::UObjective()
 	state = EObjectiveState::NoInteraction;
 }
 
+UObjective::~UObjective()
+{
+}
+
 TArray<UObjective*> UObjective::GetLiveObjectives()
 {
 	return UObjective::INSTANCES;
@@ -43,4 +47,9 @@ FScore UObjective::EvalScoreFor_Implementation(APlayerState* who) const
 {
 	unimplemented();
 	return FScore();
+}
+
+void UObjective::AssumeDefaultIfNoInteraction_Implementation()
+{
+	unimplemented();
 }

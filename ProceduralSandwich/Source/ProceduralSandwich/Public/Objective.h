@@ -5,16 +5,8 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Score.h"
+#include "ObjectiveViewRepresentation.h"
 #include "Objective.generated.h"
-
-
-UENUM(BlueprintType)
-enum class EObjectiveState : uint8
-{
-	Failed        UMETA( DisplayName="Failed" ),
-	NoInteraction UMETA( DisplayName="No Interaction" ),
-	Completed     UMETA( DisplayName="Completed" )
-};
 
 
 class APlayerState;
@@ -26,8 +18,8 @@ class PROCEDURALSANDWICH_API UObjective : public UActorComponent
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UObjective();
+	virtual ~UObjective();
 
 	UFUNCTION(BlueprintCallable)
 	static TArray<UObjective*> GetLiveObjectives();
@@ -46,8 +38,12 @@ public:
 
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
 	FScore EvalScoreFor(APlayerState* who) const;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void AssumeDefaultIfNoInteraction();
 protected:
 	virtual FScore EvalScoreFor_Implementation(APlayerState* who) const; // = 0
+	virtual void AssumeDefaultIfNoInteraction_Implementation(); // = 0
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText displayName;
