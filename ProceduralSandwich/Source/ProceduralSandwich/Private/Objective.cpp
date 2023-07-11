@@ -43,6 +43,15 @@ EObjectiveState UObjective::GetState() const
 	return state;
 }
 
+FObjectiveViewRepresentation UObjective::GetView() const
+{
+	FObjectiveViewRepresentation out;
+	out.dataSource = const_cast<UObjective*>(this);
+	out.displayName = this->displayName;
+	out.displayState = this->GetState();
+	return out;
+}
+
 FScore UObjective::EvalScoreFor_Implementation(APlayerState* who) const
 {
 	unimplemented();
@@ -52,4 +61,9 @@ FScore UObjective::EvalScoreFor_Implementation(APlayerState* who) const
 void UObjective::AssumeDefaultIfNoInteraction_Implementation()
 {
 	unimplemented();
+}
+
+bool UObjective::ShouldShowViewFor_Implementation(APlayerState* who) const
+{
+	return true;
 }
