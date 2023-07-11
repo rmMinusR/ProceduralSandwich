@@ -3,12 +3,12 @@
 
 #include "ObjectiveViewRepresentation.h"
 
-FObjectiveViewRepresentation::FObjectiveViewRepresentation()
+UObjectiveViewRepresentation::UObjectiveViewRepresentation()
 {
 	displayState = EObjectiveState::NoInteraction;
 }
 
-FObjectiveViewRepresentation::~FObjectiveViewRepresentation()
+UObjectiveViewRepresentation::~UObjectiveViewRepresentation()
 {
 }
 

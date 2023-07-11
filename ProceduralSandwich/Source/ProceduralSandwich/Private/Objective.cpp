@@ -43,12 +43,16 @@ EObjectiveState UObjective::GetState() const
 	return state;
 }
 
-FObjectiveViewRepresentation UObjective::GetView() const
+UObjectiveViewRepresentation* UObjective::GetView()
 {
-	FObjectiveViewRepresentation out;
-	out.dataSource = const_cast<UObjective*>(this);
-	out.displayName = this->displayName;
-	out.displayState = this->GetState();
+	UObjectiveViewRepresentation* out = NewObject<UObjectiveViewRepresentation>();
+
+	//Write view data
+	//Note that these changes will reflect in copiers, but they should make a value copy instead if they don't want that happening
+	out->dataSource = const_cast<UObjective*>(this);
+	out->displayName = this->displayName;
+	out->displayState = this->GetState();
+
 	return out;
 }
 

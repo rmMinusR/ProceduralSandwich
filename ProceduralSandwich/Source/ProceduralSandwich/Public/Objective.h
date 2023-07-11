@@ -36,12 +36,18 @@ public:
 	UFUNCTION(BlueprintPure)
 	EObjectiveState GetState() const;
 
+
+public:
 	UFUNCTION(BlueprintPure)
-	virtual FObjectiveViewRepresentation GetView() const;
+	virtual UObjectiveViewRepresentation* GetView();
 
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
 	bool ShouldShowViewFor(APlayerState* who) const;
+protected:
+	virtual bool ShouldShowViewFor_Implementation(APlayerState* who) const; // = 0
+	
 
+public:
 	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
 	FScore EvalScoreFor(APlayerState* who) const;
 
@@ -50,7 +56,6 @@ public:
 protected:
 	virtual FScore EvalScoreFor_Implementation(APlayerState* who) const; // = 0
 	virtual void AssumeDefaultIfNoInteraction_Implementation(); // = 0
-	virtual bool ShouldShowViewFor_Implementation(APlayerState* who) const; // = 0
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText displayName;

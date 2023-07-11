@@ -19,14 +19,14 @@ enum class EObjectiveState : uint8
 class UObjective;
 
 
-USTRUCT(BlueprintType)
-struct PROCEDURALSANDWICH_API FObjectiveViewRepresentation
+UCLASS(BlueprintType)
+class PROCEDURALSANDWICH_API UObjectiveViewRepresentation : public UObject
 {
 	GENERATED_BODY()
 
 public:
-	FObjectiveViewRepresentation();
-	~FObjectiveViewRepresentation();
+	UObjectiveViewRepresentation();
+	~UObjectiveViewRepresentation();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FText displayName;
