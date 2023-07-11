@@ -24,8 +24,10 @@ FScore UCompletableObjective::EvalScoreFor_Implementation(APlayerState* who) con
 	{
 		switch (state)
 		{
-		case EObjectiveState::NoInteraction: return incompleteScore;
+		case EObjectiveState::Failed: return incompleteScore;
 		case EObjectiveState::Completed: return completionScore;
+
+		case EObjectiveState::NoInteraction: return FScore();
 			
 		default:
 			unimplemented();
@@ -41,4 +43,9 @@ FScore UCompletableObjective::EvalScoreFor_Implementation(APlayerState* who) con
 void UCompletableObjective::AssumeDefaultIfNoInteraction_Implementation()
 {
 	if (state == EObjectiveState::NoInteraction) state = EObjectiveState::Failed;
+}
+
+bool UCompletableObjective::ShouldShowViewFor_Implementation(APlayerState* who) const
+{
+	return !owner || owner == who;
 }

@@ -25,8 +25,10 @@ FScore UFailableObjective::EvalScoreFor_Implementation(APlayerState* who) const
 	{
 		switch (state)
 		{
-		case EObjectiveState::NoInteraction: return FScore();
+		case EObjectiveState::Completed: return FScore();
 		case EObjectiveState::Failed: return failScore;
+
+		case EObjectiveState::NoInteraction: return FScore();
 			
 		default:
 			unimplemented();
@@ -42,4 +44,9 @@ FScore UFailableObjective::EvalScoreFor_Implementation(APlayerState* who) const
 void UFailableObjective::AssumeDefaultIfNoInteraction_Implementation()
 {
 	if (state == EObjectiveState::NoInteraction) state = EObjectiveState::Completed;
+}
+
+bool UFailableObjective::ShouldShowViewFor_Implementation(APlayerState* who) const
+{
+	return !owner || owner == who;
 }
