@@ -5,67 +5,58 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "Score.h"
+#include "ObjectiveViewRepresentation.h"
 #include "Objective.generated.h"
-
-
-UENUM(BlueprintType)
-enum class EObjectiveState : uint8
-{
-	NoChanges UMETA( DisplayName="No Action Taken" ),
-	Completed UMETA( DisplayName="Completed" )
-};
 
 
 class APlayerState;
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( Abstract, Blueprintable, ClassGroup=(Custom) )
 class PROCEDURALSANDWICH_API UObjective : public UActorComponent
 {
 	GENERATED_BODY()
 
 public:	
-	// Sets default values for this component's properties
 	UObjective();
+	virtual ~UObjective();
 
+	UFUNCTION(BlueprintCallable)
+	static TArray<UObjective*> GetLiveObjectives();
+private:
+	static TArray<UObjective*> INSTANCES; // Fast lookup
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void BeginDestroy() override;
 
 	UPROPERTY(EditAnywhere, BlueprintGetter = "GetState", meta = (AllowPrivateAccess = "true"))
 	EObjectiveState state;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FScore completionScore;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FScore incompleteScore;
-
-	/** Allow "stealing" objectives */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	bool bIsContestable;
-
-	/** Leave null to allow anyone to claim */
-	UPROPERTY(VisibleInstanceOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	APlayerState* owner;
-
-	/** Who takes the credit for completing (or blame for failing) this objective */
-	UPROPERTY(VisibleInstanceOnly, BlueprintGetter = "GetCreditor", meta = (AllowPrivateAccess = "true"))
-	APlayerState* creditor;
-
 public:
-	DECLARE_EVENT_OneParam(UObjective, FObjectiveCallback, UObjective*)
-	FObjectiveCallback onCompleted;
-
-	UFUNCTION(BlueprintCallable)
-	void TryMarkCompleted(APlayerState* who);
-
 	UFUNCTION(BlueprintPure)
 	EObjectiveState GetState() const;
 
-	UFUNCTION(BlueprintPure)
-	APlayerState* GetCreditor() const;
 
+public:
 	UFUNCTION(BlueprintPure)
+	virtual UObjectiveViewRepresentation* GetView();
+
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
+	bool ShouldShowViewFor(APlayerState* who) const;
+protected:
+	virtual bool ShouldShowViewFor_Implementation(APlayerState* who) const; // = 0
+	
+
+public:
+	UFUNCTION(BlueprintPure, BlueprintNativeEvent)
 	FScore EvalScoreFor(APlayerState* who) const;
+
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void AssumeDefaultIfNoInteraction();
+protected:
+	virtual FScore EvalScoreFor_Implementation(APlayerState* who) const; // = 0
+	virtual void AssumeDefaultIfNoInteraction_Implementation(); // = 0
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FText displayName;
 };

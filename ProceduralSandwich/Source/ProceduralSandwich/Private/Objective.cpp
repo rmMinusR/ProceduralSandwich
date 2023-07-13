@@ -10,31 +10,32 @@ UObjective::UObjective()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
 
-	state = EObjectiveState::NoChanges;
-	completionScore.promotion = 1;
-	bIsContestable = false;
-	owner = nullptr;
-	creditor = nullptr;
+	state = EObjectiveState::NoInteraction;
 }
 
+UObjective::~UObjective()
+{
+}
 
-// Called when the game starts
+TArray<UObjective*> UObjective::GetLiveObjectives()
+{
+	return UObjective::INSTANCES;
+}
+
+TArray<UObjective*> UObjective::INSTANCES;
+
 void UObjective::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
-	
+	UObjective::INSTANCES.Add(this);
 }
 
-void UObjective::TryMarkCompleted(APlayerState* who)
+void UObjective::BeginDestroy()
 {
-	if ((!owner || owner == who) && (!creditor || bIsContestable))
-	{
-		state = EObjectiveState::Completed;
-		onCompleted.Broadcast(this);
-		creditor = who;
-	}
+	Super::BeginDestroy();
+
+	UObjective::INSTANCES.Remove(this);
 }
 
 EObjectiveState UObjective::GetState() const
@@ -42,31 +43,31 @@ EObjectiveState UObjective::GetState() const
 	return state;
 }
 
-APlayerState* UObjective::GetCreditor() const
+UObjectiveViewRepresentation* UObjective::GetView()
 {
-	return creditor;
+	UObjectiveViewRepresentation* out = NewObject<UObjectiveViewRepresentation>();
+
+	//Write view data
+	//Note that these changes will reflect in copiers, but they should make a value copy instead if they don't want that happening
+	out->dataSource = const_cast<UObjective*>(this);
+	out->displayName = this->displayName;
+	out->displayState = this->GetState();
+
+	return out;
 }
 
-FScore UObjective::EvalScoreFor(APlayerState* who) const
+FScore UObjective::EvalScoreFor_Implementation(APlayerState* who) const
 {
-	if (who == creditor) // You took credit (or blame)
-	{
-		switch (state)
-		{
-		case EObjectiveState::NoChanges: return incompleteScore;
-		case EObjectiveState::Completed: return completionScore;
+	unimplemented();
+	return FScore();
+}
 
-		default:
-			unimplemented();
-			return FScore();
-		}
-	}
-	else if (who == owner) // You were supposed to interact but didn't, or it was stolen. Always count as incomplete.
-	{
-		return incompleteScore;
-	}
-	else // You didn't interact, but didn't have to. No change.
-	{
-		return FScore();
-	}
+void UObjective::AssumeDefaultIfNoInteraction_Implementation()
+{
+	unimplemented();
+}
+
+bool UObjective::ShouldShowViewFor_Implementation(APlayerState* who) const
+{
+	return true;
 }
